@@ -1,0 +1,254 @@
+@import 'tailwindcss';
+
+/* ── Design tokens ────────────────────────────────────────── */
+@theme {
+  --color-ink: #04060c;
+  --color-ink-2: #080c16;
+  --color-surface: #0c111d;
+  --color-surface-2: #111827;
+  --color-line: #1c2436;
+  --color-text: #e8eefb;
+  --color-muted: #8fa0bb;
+  --color-dim: #64748b;
+  --color-accent: #38bdf8;
+  --color-accent-2: #a78bfa;
+  --color-accent-3: #34d399;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* keeps anchored sections clear of the fixed navbar */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 32%, transparent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Slim custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #223049;
+    border-radius: 99px;
+    border: 2px solid var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2f4260;
+  }
+}
+
+/* ── Component classes ───────────────────────────────────── */
+/* Declared in the `components` layer so Tailwind utilities always win. */
+@layer components {
+  .text-gradient {
+    background-image: linear-gradient(
+      100deg,
+      var(--color-accent) 0%,
+      #7dd3fc 30%,
+      var(--color-accent-2) 70%,
+      #f0abfc 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  /* Thin gradient hairline used to separate sections */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--color-accent) 35%, transparent),
+      transparent
+    );
+  }
+
+  /* Panel with a soft inner sheen and a hairline border */
+  .card {
+    position: relative;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+    border: 1px solid var(--color-line);
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--color-accent) 45%, var(--color-line));
+    box-shadow:
+      0 18px 45px -18px rgba(0, 0, 0, 0.85),
+      0 0 0 1px color-mix(in oklab, var(--color-accent) 14%, transparent),
+      0 0 60px -30px color-mix(in oklab, var(--color-accent) 55%, transparent);
+  }
+
+  /* Small monospace pill used for tech tags */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    border: 1px solid var(--color-line);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.25rem 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.01em;
+    color: var(--color-muted);
+    transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+  }
+  .chip:hover {
+    color: var(--color-text);
+    border-color: color-mix(in oklab, var(--color-accent) 50%, var(--color-line));
+    background: color-mix(in oklab, var(--color-accent) 10%, transparent);
+  }
+}
+
+/* ── Background texture ──────────────────────────────────── */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 78% 62% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 78% 62% at 50% 0%, #000 55%, transparent 100%);
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, -34px, 0) scale(1.08);
+  }
+}
+.animate-float-slow {
+  animation: float-slow 16s ease-in-out infinite;
+}
+.animate-float-slower {
+  animation: float-slow 24s ease-in-out infinite reverse;
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret {
+  animation: blink 1.05s steps(1) infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 34s linear infinite;
+}
+.marquee-mask {
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent-3) 60%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+.pulse-dot {
+  animation: pulse-ring 2.2s ease-out infinite;
+}
+
+/* Scroll reveal — the `.is-visible` class is added by useReveal() */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Respect the OS "reduce motion" setting: kill movement, keep content visible */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
